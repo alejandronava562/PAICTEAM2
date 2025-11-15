@@ -8,7 +8,6 @@ from openai import OpenAI
 # ---- comment here ---- #
 # Alejandro
 #Lucas
-# Harry
 # ---------------------- #
 
 API_KEY = os.getenv("OPENAI_API_KEY")
@@ -39,6 +38,14 @@ STATE: Dict[str, Any] = {
         Robert(name = "Mr. Incinerator", category = "waste burning,  pollution").__dict__,
         Robert(name = "The Lorax Jr", category = "Habitats and Ecosystem").__dict__,
         Robert(name = "Tree Slayer", category = "Tree cutter").__dict__, 
+        Robert(name = "Plastic Pirate", category = "Plastic pollution").__dict__,
+        Robert(name = "Water Waster", category = "Water pollution and wastage").__dict__,
+        Robert(name = "Energy Eater", category = "Energy consumption and wastage").__dict__,
+        Robert(name = "Air Polluter", category = "Air pollution and emissions").__dict__,
+        Robert(name = "Soil Spoiler", category = "Soil contamination and degradation").__dict__,
+        Robert(name = "Wildlife Wrecker", category = "Biodiversity loss and habitat destruction").__dict__,
+        Robert(name = "Ocean Obliterator", category = "Marine pollution and overfishing").__dict__,
+        Robert(name = "Climate Conqueror", category = "Climate change and global warming").__dict__,
     ],
     "log": []
 }
