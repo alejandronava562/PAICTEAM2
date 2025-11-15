@@ -8,6 +8,7 @@ from openai import OpenAI
 # ---- comment here ---- #
 # Alejandro
 #Lucas
+# Harry
 # ---------------------- #
 
 API_KEY = os.getenv("OPENAI_API_KEY")
