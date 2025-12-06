@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boss Rush Game</title>
+</head>
+<body>
+    <h1>Eco Boss Rush</h1>
+
+    <button onclick="startGame()">Start Game</button>
+    <div id="output"></div>
+
+    <script>
+        let bosses = [];
+        let currentBoss = 0;
+
+        async function startGame() {
+            let res = await fetch("/api/start");
+            let data = await res.json();
+            bosses = data.bosses;
+            currentBoss = 0;
+            document.getElementById("output").innerHTML = "Game started!";
+            loadScene();
+        }
+
+        async function loadScene() {
+            let res = await fetch("/api/scene", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ boss_index: currentBoss })
+            });
+
+            let data = await res.json();
+            let html = `<p>${data.scene}</p>`;
+
+            data.choices.forEach(choice => {
+                html += `<button onclick='choose(${JSON.stringify(choice.delta_player)}, ${JSON.stringify(choice.delta_boss)})'>
+                            ${choice.text}
+                         </button><br>`;
+            });
+
+            document.getElementById("output").innerHTML = html;
+        }
+
+        async function choose(deltaPlayer, deltaBoss) {
+            let res = await fetch("/api/apply_choice", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    boss_index: currentBoss,
+                    delta_player: deltaPlayer,
+                    delta_boss: deltaBoss
+                })
+            });
+
+            let result = await res.json();
+
+            document.getElementById("output").innerHTML =
+                `<p>Player HP: ${result.player_hp}<br>Boss HP: ${result.boss_hp}</p>`;
+
+            if (result.boss_hp > 0 && result.player_hp > 0) {
+                loadScene();
+            }
+        }
+    </script>
+</body>
+</html>
