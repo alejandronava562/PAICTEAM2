@@ -79,11 +79,23 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-@app.route("/api/start", methods=["GET"])
+@app.route("/api/start", methods=["GET", "POST"])
 def start_game():
+    payload = request.get_json(silent=True) or {}
+    username = payload.get("username")
+    difficulty = payload.get("difficulty")
+
     random.shuffle(STATE["bosses"])
     STATE["player"] = BOBBY()
-    return jsonify({"message": "Game started.", "bosses": STATE["bosses"]})
+    STATE["username"] = username
+    STATE["difficulty"] = difficulty
+
+    return jsonify({
+        "message": "Game started.",
+        "bosses": STATE["bosses"],
+        "username": username,
+        "difficulty": difficulty,
+    })
 
 @app.route("/api/scene", methods=["POST"])
 def scene():

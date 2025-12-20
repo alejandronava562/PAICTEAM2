@@ -8,8 +8,9 @@
 </head>
 <body>
   <main class="container">
-    <section class="card" aria-labelledby="title">
-      <h1 id="title">Sustainability App</h1>
+    <section id="start_screen" class="card" aria-labelledby="title">
+      <h1 id="title">EcoGuardian</h1>
+      <p id="status" role="status" aria-live="polite"></p>
 
       <form id="startForm" novalidate>
         <div class="field">
@@ -43,6 +44,13 @@
           Start
         </button>
       </form>
+    </section>
+
+    <section id="game_screen" class="card hidden" aria-hidden="true">
+        <h2>Game</h2>
+        <p id="gameStatus">Loading...</p>
+        <!-- TODO: WIRE UP BATTLE UI HERE-->
+
     </section>
   </main>
 

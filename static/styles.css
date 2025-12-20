@@ -43,6 +43,13 @@ h1 {
   text-align: center;
 }
 
+#status {
+  min-height: 1.25rem;
+  margin: 0.5rem 0 1.25rem;
+  color: var(--muted);
+  text-align: center;
+}
+
 .field {
   margin-bottom: 1.5rem;
 }
@@ -116,4 +123,7 @@ input[type="text"]:focus {
   .card {
     padding: 1.5rem;
   }
+}
+.hidden {
+    display: none !important;
 }
