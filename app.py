@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import json, random, time, os
 from dataclasses import dataclass, asdict
 from typing import Dict, Any
@@ -74,6 +74,10 @@ def ask_model(boss, player):
 # === Flask App === #
 
 app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 @app.route("/api/start", methods=["GET"])
 def start_game():
