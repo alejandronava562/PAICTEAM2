@@ -5,6 +5,11 @@ const form = document.getElementById("startForm");
 const statusEl = document.getElementById("status");
 const game_screen = document.getElementById("game_screen")
 const start_screen = document.getElementById("start_screen")
+const sceneText = document.getElementById("scene-text");
+const bossName = document.getElementById("boss_name")
+const player_hp = document.getElementById("player_hp")
+const boss_hp = document.getElementById("boss_hp")
+const gamestatus = document.getElementById("gameStatus")
 
 
 let selectedDifficulty = null;
@@ -63,7 +68,7 @@ form.addEventListener("submit", async (e) => {
     const data = await res.json();
     localStorage.setItem("bosses", JSON.stringify(data.bosses ?? []));
     localStorage.setItem("player_hp", data.player_hp ?? "3");
-    displayScene();
+    loadFirstStage();
   } catch (err) {
     console.error(err);
     setStatus("Could not start game. Please try again.");
@@ -72,12 +77,26 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-function loadFirstStage() {
-  
+async function loadFirstStage() {
+  const bosses = JSON.parse(localStorage.getItem("bosses"));
+  if (!bosses.length) {
+    setStatus("No bosses found. Please restart.")
+    return;
+  }
+  const bossIndex = 0;
+  const response = await fetch("/api/scene", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({boss_index: bossIndex})
+  });
+  const data = await response.json();
+  displayScene(data, bossIndex, bosses[bossIndex])
+
 }
 
 function displayScene(data, bossIndex, boss) {
   start_screen.classList.add("hidden");
   game_screen.classList.remove("hidden");
   game_screen.setAttribute("aria-hidden", "false");
+  sceneText.textContent = data.scene;
 }

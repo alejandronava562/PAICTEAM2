@@ -47,7 +47,7 @@ def build_scene_prompt(boss: Robert, player: BOBBY) -> str:
     Write a new battle scene with 4 choices.
     Return JSON only:
     {{
-        "scene": "...",
+        "scene": string,
         "choices": [
             {{
                 "id": "A",
