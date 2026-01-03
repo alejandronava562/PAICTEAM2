@@ -64,7 +64,7 @@ form.addEventListener("submit", async (e) => {
 
     const data = await res.json();
     localStorage.setItem("bosses", JSON.stringify(data.bosses ?? []));
-    setStatus(data.message ?? "Game started.");
+    localStorage.setItem("player_hp", data.player_hp ?? "3");
   } catch (err) {
     console.error(err);
     setStatus("Could not start game. Please try again.");
@@ -72,3 +72,11 @@ form.addEventListener("submit", async (e) => {
     updateStartButton();
   }
 });
+
+function loadFirstStage() {
+
+}
+
+function displayScene(data, bossIndex, boss) {
+
+}

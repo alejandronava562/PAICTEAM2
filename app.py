@@ -11,7 +11,7 @@ client = OpenAI(api_key=API_KEY)
 
 @dataclass
 class BOBBY:
-    hp: int = 25
+    hp: int = 3
     turn: int = 1
 
 @dataclass
@@ -84,9 +84,13 @@ def start_game():
     payload = request.get_json(silent=True) or {}
     username = payload.get("username")
     difficulty = payload.get("difficulty")
-
+    hp_by_difficulty = {"easy": 6, "medium": 4, "hard": 2}
+    if not difficulty:
+        return jsonify({"error": "Missing difficulty"}), 400
+    
+    start_hp = hp_by_difficulty.get(difficulty, 3)
     random.shuffle(STATE["bosses"])
-    STATE["player"] = BOBBY()
+    STATE["player"] = BOBBY(hp=start_hp)
     STATE["username"] = username
     STATE["difficulty"] = difficulty
 
@@ -95,6 +99,7 @@ def start_game():
         "bosses": STATE["bosses"],
         "username": username,
         "difficulty": difficulty,
+        "player_hp": STATE["player"].hp
     })
 
 @app.route("/api/scene", methods=["POST"])
