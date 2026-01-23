@@ -312,7 +312,31 @@ def _boss_image_placeholder(boss: Boss) -> str:
     return f"data:image/svg+xml;base64,{b64}"
 
 
+def _boss_name_to_filename(name: str) -> str:
+    """Convert boss name to a safe filename: 'Ocean Obliterator' -> 'ocean_obliterator'"""
+    return name.lower().replace(" ", "_").replace("-", "_")
+
+
+def _check_custom_boss_image(boss_name: str) -> Optional[str]:
+    filename_base = _boss_name_to_filename(boss_name)
+    extensions = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"]
+    
+    for ext in extensions:
+        filepath = os.path.join("static", "boss_images", filename_base + ext)
+        if os.path.exists(filepath):
+            # Return URL path for the static file
+            return f"/static/boss_images/{filename_base}{ext}"
+    
+    return None
+
+
 def _get_or_generate_boss_image(boss_dict: Dict[str, Any]) -> str:
+    # First, check for a custom student-uploaded image
+    custom_image = _check_custom_boss_image(boss_dict.get("name", ""))
+    if custom_image:
+        boss_dict["image_data_url"] = custom_image
+        return custom_image
+    
     if boss_dict.get("image_data_url"):
         return boss_dict["image_data_url"]
 
@@ -553,6 +577,28 @@ def boss_image():
     boss_index = max(0, min(boss_index, len(STATE["bosses"]) - 1))
     boss_dict = STATE["bosses"][boss_index]
     return jsonify({"boss_image": _get_or_generate_boss_image(boss_dict)})
+
+
+@app.route("/api/boss_list", methods=["GET"])
+def boss_list():
+    """
+    Returns all bosses with their expected image filenames.
+    Useful for students to know what to name their Sora-generated images!
+    
+    Visit: http://localhost:5000/api/boss_list
+    """
+    bosses = []
+    for name, category in BOSS_LIBRARY:
+        filename = _boss_name_to_filename(name)
+        has_custom = _check_custom_boss_image(name) is not None
+        bosses.append({
+            "name": name,
+            "category": category,
+            "filename": filename,
+            "example": f"{filename}.png",
+            "has_custom_image": has_custom,
+        })
+    return jsonify({"bosses": bosses})
 
 # === ask_questions.py adapted === #
 @app.route("/api/questions", methods=["POST"])
